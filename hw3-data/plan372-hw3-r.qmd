@@ -1,0 +1,52 @@
+---
+title: "plan372-hw3-quarto"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+rm(list=ls()) # Clear memory
+install.packages("sf")
+```
+
+Loading the necessary libraries
+
+```{r}
+library(tidyverse)
+library(sf) # The sf package provides functions for working with spatial data
+```
+
+Creating census block dataset
+```{r}
+census = read_sf("orange_durham_wake_block_groups.shp")
+#NOTE: I had to put this document inside my hw3 data folder for it to run properly, and also open a new project as hw3 data
+```
+
+- This doesn't have any demographic information, so I need to read in a csv file that does 
+
+Adding Census Demographic csv
+```{r}
+census_demographics = read.csv("triangle_census.csv")
+```
+

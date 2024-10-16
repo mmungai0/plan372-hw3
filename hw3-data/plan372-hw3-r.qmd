@@ -115,4 +115,7 @@ wake_cars = wake |>
     fd_cars=sum(zero_vehicle_households[near_store==0])/sum(total_households[near_store==0]) * 100,
     all_cars=sum(zero_vehicle_households)/sum(total_households) * 100
             ) 
+wake_cars
 ```
+Roughly the same percentage of zero car households in food deserts (3.89%) compared to in all of Wake County (3.96%).
+

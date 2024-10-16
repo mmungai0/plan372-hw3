@@ -44,9 +44,41 @@ census = read_sf("orange_durham_wake_block_groups.shp")
 ```
 
 - This doesn't have any demographic information, so I need to read in a csv file that does 
+- NOTE: GEOID in census is a character but a number in census_demographics 
+- Have to change the GEOID to a character type in census_demographics according to lecture video
 
 Adding Census Demographic csv
 ```{r}
-census_demographics = read.csv("triangle_census.csv")
+census_demographics = read.csv("triangle_census.csv", col_types=c(GEOID="character"))
+#followed this code from one of the lectures and I kept getting an error. I asked ChatGPT what this error meant and it told me that this was a code from the readr package, which I have not downloaded, and that there was an easier way to do it, which is shown below.
 ```
 
+Changing GEOID column to character (help from CHATGPT)
+```{r}
+census_demographics$GEOID <- as.character(census_demographics$GEOID)
+#this worked
+```
+
+Double-checking if there are duplicated rows
+```{r}
+stopifnot(!any(duplicated(census$GEOID))) 
+stopifnot(!any(duplicated(census_demographics$GEOID))) 
+
+#stops if there is ANY duplicate GEOIDs in the census and in the census demographic datasets, which is necessary because we need to do a 1 to 1 ratio with them both 
+#did nothing; no stops 
+```
+
+- Now I need to join the two datasets so there's information about census demographics for every block.
+
+Joining the two datasets 
+```{r}
+census_info = left_join(census, census_demographics, by="GEOID")
+```
+
+Question 3: What percentage of the Wake County population resides in food deserts?
+
+Filtering for Wake County
+```{r}
+unique(census_info$COUNTYFP) 
+#But which one is Wake?
+```

@@ -49,7 +49,10 @@ census = read_sf("orange_durham_wake_block_groups.shp")
 
 Adding Census Demographic csv
 ```{r}
-census_demographics = read.csv("triangle_census.csv", col_types=c(GEOID="character"))
+census_demographics = read.csv("triangle_census.csv")
+
+#, col_types=c(GEOID="character"))
+
 #followed this code from one of the lectures and I kept getting an error. I asked ChatGPT what this error meant and it told me that this was a code from the readr package, which I have not downloaded, and that there was an easier way to do it, which is shown below.
 ```
 
@@ -75,10 +78,41 @@ Joining the two datasets
 census_info = left_join(census, census_demographics, by="GEOID")
 ```
 
-Question 3: What percentage of the Wake County population resides in food deserts?
+#Question 3: What percentage of the Wake County population resides in food deserts?
 
 Filtering for Wake County
 ```{r}
 unique(census_info$COUNTYFP) 
-#But which one is Wake?
+```
+
+But which one is Wake? 183. I looked it up and found a pdf of the census state county FIPS code list with names: https://www2.census.gov/programs-surveys/decennial/2010/partners/pdf/FIPS_StateCounty_Code.pdf
+
+General dataset for just Wake County (useful for future questions)
+```{r}
+wake = census_info |>
+  filter(COUNTYFP == "183")
+```
+
+```{r}
+sum(wake$total_population) 
+#just to double check with info from assignment (there are 1,069,079 residents of Wake County)
+```
+
+```{r}
+  wake |>
+  summarize(pct_fd = sum(total_population[wake$near_store==0]) / sum(total_population) * 100)  
+#food desert == 0 bc it wasn't selected 
+#conditional in brackets is a way of writing I found on Stack Overflow: https://stackoverflow.com/questions/32148664/create-summary-statistics-based-on-condition
+  
+```
+
+Percent of Wake County residents living in a food desert is 9.9%.
+
+#Question 4: Calculate the percentage of households that do not own a vehicle, and the percentage of households who are low income, in both the food desert and Wake County overall.
+```{r}
+wake_cars = wake |>
+  summarize(
+    fd_cars=sum(zero_vehicle_households[near_store==0])/sum(total_households[near_store==0]) * 100,
+    all_cars=sum(zero_vehicle_households)/sum(total_households) * 100
+            ) 
 ```

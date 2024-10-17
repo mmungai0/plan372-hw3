@@ -141,8 +141,3 @@ wake |>
   )
 ```
 Slightly higher percentage of low-income households living in food deserts (21.46%) compared to in all of Wake County (18.80%).
-
-```{r}
-
-
-```
